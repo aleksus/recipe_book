@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}{{ ingredient.name }} | Ingredients | Recipe Book{% endblock %}
+
+{% block content %}
+    <p><a href="{% url 'ingredient-list' %}">← All ingredients</a></p>
+    <section class="panel">
+        <h1>{{ ingredient.name }}</h1>
+        {% if ingredient.unit %}
+            <p><strong>Default unit:</strong> {{ ingredient.unit }}</p>
+        {% else %}
+            <p class="muted">No default unit has been set.</p>
+        {% endif %}
+        <p><strong>Used in:</strong> {{ ingredient.recipe_ingredients.count }} recipe{{ ingredient.recipe_ingredients.count|pluralize }}</p>
+        <div class="actions">
+            <a class="button" href="{% url 'ingredient-update' ingredient.pk %}">Edit ingredient</a>
+            <a class="button danger" href="{% url 'ingredient-delete' ingredient.pk %}">Delete ingredient</a>
+        </div>
+    </section>
+{% endblock %}

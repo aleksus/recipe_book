@@ -6,7 +6,7 @@
     <p><a href="{% url 'recipe-list' %}">← All recipes</a></p>
     <article>
         <h1>{{ recipe.title }}</h1>
-        {% if recipe.category %}<p class="muted">Category: {{ recipe.category }}</p>{% endif %}
+        {% if recipe.category %}<p class="muted">Category: <a href="{% url 'category-detail' recipe.category.pk %}">{{ recipe.category }}</a></p>{% endif %}
         {% if recipe.image %}
             <img class="recipe-image" src="{{ recipe.image.url }}" alt="{{ recipe.title }}">
         {% endif %}
@@ -17,6 +17,25 @@
             <p><strong>Servings:</strong> {{ recipe.servings }}</p>
             <h2>Instructions</h2>
             <p>{{ recipe.instructions|linebreaksbr }}</p>
+        </section>
+
+        <section class="panel">
+            <h2>Ingredients</h2>
+            {% with recipe_ingredients=recipe.ingredients.all %}
+                {% if recipe_ingredients %}
+                    <ul class="ingredient-list">
+                        {% for recipe_ingredient in recipe_ingredients %}
+                            <li>
+                                {{ recipe_ingredient.quantity|floatformat:"-2" }} {{ recipe_ingredient.unit }}
+                                <a href="{% url 'ingredient-detail' recipe_ingredient.ingredient.pk %}">{{ recipe_ingredient.ingredient.name }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="muted">No ingredients have been added to this recipe yet.</p>
+                    <a class="button" href="{% url 'recipe-update' recipe.pk %}">Add ingredients</a>
+                {% endif %}
+            {% endwith %}
         </section>
 
         <div class="actions">

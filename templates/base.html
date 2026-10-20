@@ -26,6 +26,8 @@
         .recipe-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; padding: 0; list-style: none; }
         .card, .panel { padding: 1.25rem; border: 1px solid #dce3dc; border-radius: .5rem; background: white; }
         .card h2 { margin-top: 0; }
+        .ingredient-list { margin: 0; padding-left: 1.25rem; }
+        .ingredient-list li { padding: .35rem 0; }
         .recipe-image { display: block; max-width: 100%; max-height: 28rem; object-fit: cover; border-radius: .4rem; }
         .field { margin: 1rem 0; }
         .field label { display: block; margin-bottom: .35rem; font-weight: 600; }
@@ -43,7 +45,11 @@
     <header>
         <nav aria-label="Main navigation">
             <a class="brand" href="{% url 'home' %}">Recipe Book</a>
-            <a href="{% url 'recipe-create' %}">Add a recipe</a>
+            <div class="actions">
+                <a href="{% url 'recipe-list' %}">Recipes</a>
+                <a href="{% url 'category-list' %}">Categories</a>
+                <a href="{% url 'ingredient-list' %}">Ingredients</a>
+            </div>
         </nav>
     </header>
     <main>

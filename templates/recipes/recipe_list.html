@@ -12,7 +12,7 @@
             {% for recipe in recipes %}
                 <li class="card">
                     <h2><a href="{% url 'recipe-detail' recipe.pk %}">{{ recipe.title }}</a></h2>
-                    {% if recipe.category %}<p class="muted">{{ recipe.category }}</p>{% endif %}
+                    {% if recipe.category %}<p class="muted">Category: <a href="{% url 'category-detail' recipe.category.pk %}">{{ recipe.category }}</a></p>{% endif %}
                     {% if recipe.description %}<p>{{ recipe.description|truncatewords:30 }}</p>{% endif %}
                     <p class="muted">{{ recipe.preparation_time }} min · Serves {{ recipe.servings }}</p>
                     <a href="{% url 'recipe-detail' recipe.pk %}">View recipe</a>

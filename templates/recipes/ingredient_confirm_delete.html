@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Delete {{ ingredient.name }} | Ingredients | Recipe Book{% endblock %}
+
+{% block content %}
+    <section class="panel">
+        <h1>Delete ingredient</h1>
+        <p>Are you sure you want to delete <strong>{{ ingredient.name }}</strong>?</p>
+        {% if ingredient.recipe_ingredients.exists %}
+            <p class="muted">This ingredient is used in {{ ingredient.recipe_ingredients.count }} recipe{{ ingredient.recipe_ingredients.count|pluralize }}. Deleting it will also remove those ingredient entries from the recipes.</p>
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <div class="actions">
+                <button class="button danger" type="submit">Delete ingredient</button>
+                <a class="button secondary" href="{% url 'ingredient-detail' ingredient.pk %}">Cancel</a>
+            </div>
+        </form>
+    </section>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Categories | Recipe Book{% endblock %}
+
+{% block content %}
+    <h1>Recipe categories</h1>
+    <p class="muted">Organize and explore recipes by category.</p>
+    <p><a class="button" href="{% url 'category-create' %}">Add a category</a></p>
+
+    {% if categories %}
+        <ul class="recipe-list">
+            {% for category in categories %}
+                <li class="card">
+                    <h2><a href="{% url 'category-detail' category.pk %}">{{ category.name }}</a></h2>
+                    <p class="muted">{{ category.recipes.count }} recipe{{ category.recipes.count|pluralize }}</p>
+                    <a href="{% url 'category-detail' category.pk %}">View category</a>
+                </li>
+            {% endfor %}
+        </ul>
+
+        {% if is_paginated %}
+            <nav class="pagination" aria-label="Category pages">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1" aria-label="First page">First</a>
+                    <a href="?page={{ page_obj.previous_page_number }}" aria-label="Previous page">Previous</a>
+                {% endif %}
+                {% for page_number in page_obj.paginator.page_range %}
+                    {% if page_number == page_obj.number %}
+                        <span aria-current="page" aria-label="Page {{ page_number }}">{{ page_number }}</span>
+                    {% else %}
+                        <a href="?page={{ page_number }}" aria-label="Page {{ page_number }}">{{ page_number }}</a>
+                    {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" aria-label="Next page">Next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last page">Last</a>
+                {% endif %}
+            </nav>
+        {% endif %}
+    {% else %}
+        <section class="panel">
+            <h2>No categories yet</h2>
+            <p>Create a category to organize your recipes.</p>
+        </section>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Ingredients | Recipe Book{% endblock %}
+
+{% block content %}
+    <h1>Ingredients</h1>
+    <p class="muted">Manage the ingredients used throughout your recipes.</p>
+    <p><a class="button" href="{% url 'ingredient-create' %}">Add an ingredient</a></p>
+
+    {% if ingredients %}
+        <ul class="recipe-list">
+            {% for ingredient in ingredients %}
+                <li class="card">
+                    <h2><a href="{% url 'ingredient-detail' ingredient.pk %}">{{ ingredient.name }}</a></h2>
+                    {% if ingredient.unit %}
+                        <p class="muted">Default unit: {{ ingredient.unit }}</p>
+                    {% else %}
+                        <p class="muted">No default unit</p>
+                    {% endif %}
+                    <a href="{% url 'ingredient-detail' ingredient.pk %}">View ingredient</a>
+                </li>
+            {% endfor %}
+        </ul>
+
+        {% if is_paginated %}
+            <nav class="pagination" aria-label="Ingredient pages">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1" aria-label="First page">First</a>
+                    <a href="?page={{ page_obj.previous_page_number }}" aria-label="Previous page">Previous</a>
+                {% endif %}
+                {% for page_number in page_obj.paginator.page_range %}
+                    {% if page_number == page_obj.number %}
+                        <span aria-current="page" aria-label="Page {{ page_number }}">{{ page_number }}</span>
+                    {% else %}
+                        <a href="?page={{ page_number }}" aria-label="Page {{ page_number }}">{{ page_number }}</a>
+                    {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" aria-label="Next page">Next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last page">Last</a>
+                {% endif %}
+            </nav>
+        {% endif %}
+    {% else %}
+        <section class="panel">
+            <h2>No ingredients yet</h2>
+            <p>Add ingredients to keep the recipe collection organized.</p>
+        </section>
+    {% endif %}
+{% endblock %}

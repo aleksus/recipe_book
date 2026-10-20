@@ -15,6 +15,25 @@
                 {{ field.errors }}
             </div>
         {% endfor %}
+        <section class="panel">
+            <h2>Ingredients</h2>
+            <p class="muted">Choose an ingredient and enter the quantity and unit. Leave an extra row blank if you do not need it.</p>
+            {{ ingredient_formset.management_form }}
+            {{ ingredient_formset.non_form_errors }}
+            {% for ingredient_form in ingredient_formset %}
+                <div class="field">
+                    {% for hidden_field in ingredient_form.hidden_fields %}{{ hidden_field }}{% endfor %}
+                    {{ ingredient_form.non_field_errors }}
+                    {% for field in ingredient_form.visible_fields %}
+                        <div class="field">
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {{ field.errors }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </section>
         <div class="actions">
             <button class="button" type="submit">{% if object %}Save changes{% else %}Create recipe{% endif %}</button>
             {% if object %}
