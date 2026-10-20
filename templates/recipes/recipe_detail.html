@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}{{ recipe.title }} | Recipe Book{% endblock %}
+
+{% block content %}
+    <p><a href="{% url 'recipe-list' %}">← All recipes</a></p>
+    <article>
+        <h1>{{ recipe.title }}</h1>
+        {% if recipe.category %}<p class="muted">Category: {{ recipe.category }}</p>{% endif %}
+        {% if recipe.image %}
+            <img class="recipe-image" src="{{ recipe.image.url }}" alt="{{ recipe.title }}">
+        {% endif %}
+        {% if recipe.description %}<p>{{ recipe.description }}</p>{% endif %}
+
+        <section class="panel">
+            <p><strong>Preparation time:</strong> {{ recipe.preparation_time }} minutes</p>
+            <p><strong>Servings:</strong> {{ recipe.servings }}</p>
+            <h2>Instructions</h2>
+            <p>{{ recipe.instructions|linebreaksbr }}</p>
+        </section>
+
+        <div class="actions">
+            <a class="button" href="{% url 'recipe-update' recipe.pk %}">Edit recipe</a>
+            <a class="button danger" href="{% url 'recipe-delete' recipe.pk %}">Delete recipe</a>
+        </div>
+    </article>
+{% endblock %}

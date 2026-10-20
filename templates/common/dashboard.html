@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | Recipe Book{% endblock %}
+
+{% block content %}
+    <h1>Recipe Book Dashboard</h1>
+    <p class="muted">Your home for discovering and managing recipes.</p>
+
+    <div class="recipe-list">
+        <section class="card">
+            <h2>{{ recipe_count }}</h2>
+            <p>Recipe{{ recipe_count|pluralize }} in your collection</p>
+            <a href="{% url 'recipe-list' %}">Browse recipes</a>
+        </section>
+        <section class="card">
+            <h2>{{ category_count }}</h2>
+            <p>Recipe categor{{ category_count|pluralize:"y,ies" }}</p>
+            <a href="{% url 'recipe-list' %}">Explore the collection</a>
+        </section>
+    </div>
+
+    <div class="actions">
+        <a class="button" href="{% url 'recipe-create' %}">Add a recipe</a>
+        <a class="button secondary" href="{% url 'recipe-list' %}">View all recipes</a>
+    </div>
+
+    <h2>Recently added</h2>
+    {% if recent_recipes %}
+        <ul class="recipe-list">
+            {% for recipe in recent_recipes %}
+                <li class="card">
+                    <h3><a href="{% url 'recipe-detail' recipe.pk %}">{{ recipe.title }}</a></h3>
+                    {% if recipe.description %}<p>{{ recipe.description|truncatewords:20 }}</p>{% endif %}
+                    <p class="muted">{{ recipe.preparation_time }} min · Serves {{ recipe.servings }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <section class="panel">
+            <p>No recipes have been added yet. Start your collection with your first recipe.</p>
+            <a class="button" href="{% url 'recipe-create' %}">Create your first recipe</a>
+        </section>
+    {% endif %}
+{% endblock %}
