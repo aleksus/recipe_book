@@ -7,6 +7,17 @@
     <p class="muted">Browse the collection or add a recipe of your own.</p>
     <p><a class="button" href="{% url 'recipe-create' %}">Add a recipe</a></p>
 
+    <form method="get" role="search">
+        <div class="field">
+            <label for="recipe-search">Search recipes</label>
+            <input id="recipe-search" type="search" name="q" value="{{ search_query }}" placeholder="Search by title, description, instructions, or category">
+        </div>
+        <div class="actions">
+            <button class="button" type="submit">Search</button>
+            {% if search_query %}<a class="button secondary" href="{% url 'recipe-list' %}">Clear search</a>{% endif %}
+        </div>
+    </form>
+
     {% if recipes %}
         <ul class="recipe-list">
             {% for recipe in recipes %}
@@ -23,26 +34,31 @@
         {% if is_paginated %}
             <nav class="pagination" aria-label="Recipe pages">
                 {% if page_obj.has_previous %}
-                    <a href="?page=1" aria-label="First page">First</a>
-                    <a href="?page={{ page_obj.previous_page_number }}" aria-label="Previous page">Previous</a>
+                    <a href="?q={{ search_query|urlencode }}&page=1" aria-label="First page">First</a>
+                    <a href="?q={{ search_query|urlencode }}&page={{ page_obj.previous_page_number }}" aria-label="Previous page">Previous</a>
                 {% endif %}
                 {% for page_number in page_obj.paginator.page_range %}
                     {% if page_number == page_obj.number %}
                         <span aria-current="page" aria-label="Page {{ page_number }}">{{ page_number }}</span>
                     {% else %}
-                        <a href="?page={{ page_number }}" aria-label="Page {{ page_number }}">{{ page_number }}</a>
+                        <a href="?q={{ search_query|urlencode }}&page={{ page_number }}" aria-label="Page {{ page_number }}">{{ page_number }}</a>
                     {% endif %}
                 {% endfor %}
                 {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}" aria-label="Next page">Next</a>
-                    <a href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last page">Last</a>
+                    <a href="?q={{ search_query|urlencode }}&page={{ page_obj.next_page_number }}" aria-label="Next page">Next</a>
+                    <a href="?q={{ search_query|urlencode }}&page={{ page_obj.paginator.num_pages }}" aria-label="Last page">Last</a>
                 {% endif %}
             </nav>
         {% endif %}
     {% else %}
         <section class="panel">
-            <h2>No recipes yet</h2>
-            <p>Start the collection by adding the first recipe.</p>
+            {% if search_query %}
+                <h2>No recipes found</h2>
+                <p>There are no recipes matching “{{ search_query }}”. Try another search.</p>
+            {% else %}
+                <h2>No recipes yet</h2>
+                <p>Start the collection by adding the first recipe.</p>
+            {% endif %}
         </section>
     {% endif %}
 {% endblock %}

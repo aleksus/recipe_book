@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 from django.db import transaction
 from django.core.paginator import Paginator
 from django.forms import inlineformset_factory
@@ -24,6 +25,23 @@ class RecipeListView(ListView):
     context_object_name = "recipes"
     paginate_by = 12
     ordering = ["-created_at"]
+
+    def get_queryset(self):
+        queryset = super().get_queryset().select_related("category")
+        query = self.request.GET.get("q", "").strip()
+        if query:
+            queryset = queryset.filter(
+                Q(title__icontains=query)
+                | Q(description__icontains=query)
+                | Q(instructions__icontains=query)
+                | Q(category__name__icontains=query)
+            )
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["search_query"] = self.request.GET.get("q", "").strip()
+        return context
 
 class RecipeDetailView(DetailView):
     model = Recipe
@@ -101,6 +119,20 @@ class IngredientListView(ListView):
     paginate_by = 20
     ordering = ["name"]
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        query = self.request.GET.get("q", "").strip()
+        if query:
+            queryset = queryset.filter(
+                Q(name__icontains=query) | Q(unit__icontains=query)
+            )
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["search_query"] = self.request.GET.get("q", "").strip()
+        return context
+
 
 class IngredientDetailView(DetailView):
     model = Ingredient
@@ -135,6 +167,18 @@ class CategoryListView(ListView):
     context_object_name = "categories"
     paginate_by = 20
     ordering = ["name"]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        query = self.request.GET.get("q", "").strip()
+        if query:
+            queryset = queryset.filter(name__icontains=query)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["search_query"] = self.request.GET.get("q", "").strip()
+        return context
 
 
 class CategoryDetailView(DetailView):
