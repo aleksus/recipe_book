@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Delete review | Recipe Book{% endblock %}
+
+{% block content %}
+    <p><a href="{% url 'recipe-detail' recipe.pk %}">← Back to {{ recipe.title }}</a></p>
+    <h1>Delete review</h1>
+    <section class="panel">
+        <p>Delete {{ object.cook.display_name }}'s {{ object.rating }}/5 review of <strong>{{ recipe.title }}</strong>?</p>
+        {% if object.comment %}<p>{{ object.comment|linebreaksbr }}</p>{% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <div class="actions">
+                <button class="button danger" type="submit">Delete review</button>
+                <a class="button secondary" href="{% url 'recipe-detail' recipe.pk %}">Cancel</a>
+            </div>
+        </form>
+    </section>
+{% endblock %}

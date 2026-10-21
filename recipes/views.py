@@ -51,6 +51,7 @@ class RecipeDetailView(DetailView):
     def get_queryset(self):
         return super().get_queryset().prefetch_related(
             "ingredients__ingredient",
+            "reviews__cook",
         )
 
 

@@ -38,6 +38,26 @@
             {% endwith %}
         </section>
 
+        <section class="panel">
+            <h2>Reviews</h2>
+            {% if recipe.reviews.all %}
+                {% for review in recipe.reviews.all %}
+                    <article>
+                        <h3>{{ review.cook.display_name }} — {{ review.rating }}/5</h3>
+                        {% if review.comment %}<p>{{ review.comment|linebreaksbr }}</p>{% else %}<p class="muted">No comment.</p>{% endif %}
+                        <p class="muted">Reviewed {{ review.created_at|date:"M j, Y" }}</p>
+                        <div class="actions">
+                            <a class="button secondary" href="{% url 'review-update' recipe.pk review.pk %}">Edit review</a>
+                            <a class="button danger" href="{% url 'review-delete' recipe.pk review.pk %}">Delete review</a>
+                        </div>
+                    </article>
+                {% endfor %}
+            {% else %}
+                <p class="muted">No reviews yet.</p>
+            {% endif %}
+            <a class="button" href="{% url 'review-create' recipe.pk %}">Add a review</a>
+        </section>
+
         <div class="actions">
             <a class="button" href="{% url 'recipe-update' recipe.pk %}">Edit recipe</a>
             <a class="button danger" href="{% url 'recipe-delete' recipe.pk %}">Delete recipe</a>

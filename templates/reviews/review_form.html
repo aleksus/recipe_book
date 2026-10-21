@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}{% if object %}Edit review{% else %}Review {{ recipe.title }}{% endif %} | Recipe Book{% endblock %}
+
+{% block content %}
+    <p><a href="{% url 'recipe-detail' recipe.pk %}">← Back to {{ recipe.title }}</a></p>
+    <h1>{% if object %}Edit review{% else %}Review {{ recipe.title }}{% endif %}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {% for field in form %}
+            <div class="field">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.help_text %}<small class="muted">{{ field.help_text }}</small>{% endif %}
+                {{ field.errors }}
+            </div>
+        {% endfor %}
+        <div class="actions">
+            <button class="button" type="submit">{% if object %}Save changes{% else %}Submit review{% endif %}</button>
+            <a class="button secondary" href="{% url 'recipe-detail' recipe.pk %}">Cancel</a>
+        </div>
+    </form>
+{% endblock %}
