@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Cooks | Recipe Book{% endblock %}
+
+{% block content %}
+    <h1>Cooks</h1>
+    <p class="muted">Meet the cooks sharing recipes with the community.</p>
+    <p><a class="button" href="{% url 'cook-create' %}">Add a cook</a></p>
+
+    <form method="get" role="search">
+        <div class="field">
+            <label for="cook-search">Search cooks</label>
+            <input id="cook-search" type="search" name="q" value="{{ search_query }}" placeholder="Search names, bios, or specialties">
+        </div>
+        <div class="actions">
+            <button class="button" type="submit">Search</button>
+            {% if search_query %}<a class="button secondary" href="{% url 'cook-list' %}">Clear search</a>{% endif %}
+        </div>
+    </form>
+
+    {% if cooks %}
+        <ul class="recipe-list">
+            {% for cook in cooks %}
+                <li class="card">
+                    <h2><a href="{% url 'cook-detail' cook.pk %}">{{ cook.display_name }}</a></h2>
+                    {% if cook.specialty %}<p class="muted">{{ cook.specialty }}</p>{% endif %}
+                    {% if cook.bio %}<p>{{ cook.bio|truncatewords:30 }}</p>{% endif %}
+                    <p class="muted">{{ cook.review_count }} review{{ cook.review_count|pluralize }}</p>
+                    <a href="{% url 'cook-detail' cook.pk %}">View cook</a>
+                </li>
+            {% endfor %}
+        </ul>
+
+        {% if is_paginated %}
+            <nav class="pagination" aria-label="Cook pages">
+                {% if page_obj.has_previous %}
+                    <a href="?q={{ search_query|urlencode }}&page=1" aria-label="First page">First</a>
+                    <a href="?q={{ search_query|urlencode }}&page={{ page_obj.previous_page_number }}" aria-label="Previous page">Previous</a>
+                {% endif %}
+                {% for page_number in page_obj.paginator.page_range %}
+                    {% if page_number == page_obj.number %}
+                        <span aria-current="page" aria-label="Page {{ page_number }}">{{ page_number }}</span>
+                    {% else %}
+                        <a href="?q={{ search_query|urlencode }}&page={{ page_number }}" aria-label="Page {{ page_number }}">{{ page_number }}</a>
+                    {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                    <a href="?q={{ search_query|urlencode }}&page={{ page_obj.next_page_number }}" aria-label="Next page">Next</a>
+                    <a href="?q={{ search_query|urlencode }}&page={{ page_obj.paginator.num_pages }}" aria-label="Last page">Last</a>
+                {% endif %}
+            </nav>
+        {% endif %}
+    {% else %}
+        <section class="panel">
+            {% if search_query %}
+                <h2>No cooks found</h2>
+                <p>There are no cooks matching “{{ search_query }}”. Try another search.</p>
+            {% else %}
+                <h2>No cooks yet</h2>
+                <p>Add a cook to introduce someone to the community.</p>
+            {% endif %}
+        </section>
+    {% endif %}
+{% endblock %}

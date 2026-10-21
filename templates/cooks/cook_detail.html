@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}{{ cook.display_name }} | Cooks | Recipe Book{% endblock %}
+
+{% block content %}
+    <p><a href="{% url 'cook-list' %}">← All cooks</a></p>
+    <h1>{{ cook.display_name }}</h1>
+    {% if cook.specialty %}<p class="muted">Specialty: {{ cook.specialty }}</p>{% endif %}
+    {% if cook.bio %}<p>{{ cook.bio|linebreaksbr }}</p>{% endif %}
+
+    <div class="actions">
+        <a class="button" href="{% url 'cook-update' cook.pk %}">Edit cook</a>
+        <a class="button danger" href="{% url 'cook-delete' cook.pk %}">Delete cook</a>
+    </div>
+
+    <h2>Reviews by {{ cook.display_name }}</h2>
+    {% if cook.reviews.all %}
+        <ul class="recipe-list">
+            {% for review in cook.reviews.all %}
+                <li class="card">
+                    <h3><a href="{% url 'recipe-detail' review.recipe.pk %}">{{ review.recipe.title }}</a></h3>
+                    <p><strong>{{ review.rating }}/5</strong></p>
+                    {% if review.comment %}<p>{{ review.comment|linebreaksbr }}</p>{% else %}<p class="muted">No comment.</p>{% endif %}
+                    <p class="muted">Reviewed {{ review.created_at|date:"M j, Y" }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <section class="panel">
+            <p class="muted">This cook has not written any reviews yet.</p>
+        </section>
+    {% endif %}
+{% endblock %}

@@ -17,10 +17,16 @@
             <p>Recipe categor{{ category_count|pluralize:"y,ies" }}</p>
             <a href="{% url 'category-list' %}">Browse categories</a>
         </section>
+        <section class="card">
+            <h2>{{ cook_count }}</h2>
+            <p>Cook{{ cook_count|pluralize }} in the community</p>
+            <a href="{% url 'cook-list' %}">Browse cooks</a>
+        </section>
     </div>
 
     <div class="actions">
         <a class="button" href="{% url 'recipe-create' %}">Add a recipe</a>
+        <a class="button secondary" href="{% url 'cook-create' %}">Add a cook</a>
         <a class="button secondary" href="{% url 'recipe-list' %}">View all recipes</a>
     </div>
 
@@ -39,6 +45,24 @@
         <section class="panel">
             <p>No recipes have been added yet. Start your collection with your first recipe.</p>
             <a class="button" href="{% url 'recipe-create' %}">Create your first recipe</a>
+        </section>
+    {% endif %}
+
+    <h2>Recently added cooks</h2>
+    {% if recent_cooks %}
+        <ul class="recipe-list">
+            {% for cook in recent_cooks %}
+                <li class="card">
+                    <h3><a href="{% url 'cook-detail' cook.pk %}">{{ cook.display_name }}</a></h3>
+                    {% if cook.specialty %}<p class="muted">{{ cook.specialty }}</p>{% endif %}
+                    {% if cook.bio %}<p>{{ cook.bio|truncatewords:20 }}</p>{% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <section class="panel">
+            <p>No cooks have been added yet. Add the first cook to the community.</p>
+            <a class="button" href="{% url 'cook-create' %}">Add the first cook</a>
         </section>
     {% endif %}
 {% endblock %}

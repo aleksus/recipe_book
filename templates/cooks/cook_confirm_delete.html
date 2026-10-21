@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Delete {{ object.display_name }} | Cooks | Recipe Book{% endblock %}
+
+{% block content %}
+    <p><a href="{% url 'cook-detail' object.pk %}">← Back to {{ object.display_name }}</a></p>
+    <h1>Delete cook</h1>
+    <section class="panel">
+        <p>Delete <strong>{{ object.display_name }}</strong>?</p>
+        {% if object.reviews.count %}
+            <p class="muted">This will also delete {{ object.reviews.count }} review{{ object.reviews.count|pluralize }} by this cook.</p>
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <div class="actions">
+                <button class="button danger" type="submit">Delete cook</button>
+                <a class="button secondary" href="{% url 'cook-detail' object.pk %}">Cancel</a>
+            </div>
+        </form>
+    </section>
+{% endblock %}
